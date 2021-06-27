@@ -1,0 +1,42 @@
+<html>
+  <body>
+    <h1>TOKOPAEDI</h1>
+    <ul class="product-list">
+      <li>Loading Product From API...</li>
+    </ul>
+  </body>
+  <script>
+    // javascript yang running di sisi browser
+    const loadData = async () => {
+      // communicate between client and server
+      const response = await window.fetch('http://localhost:3000/products');
+      const products = await response.json();
+
+      // render the UI to the DOM
+      const productListContainer = document.querySelector('.product-list');
+
+      // fragment = potongan html
+      let productItemsFragment = '';
+
+      // loop data products untuk "mengisi" list product
+      for (const product of products) {
+        productItemsFragment += `
+        <li>
+          <div>
+            <h2>${product.name}</h2>
+            <p>${product.price}</p>
+          </div>
+        </li>
+        `;
+      }
+
+      // "timpa/overwrite" productListContainer dengan list of product items
+      productListContainer.innerHTML = productItemsFragment;
+    }
+
+    // only runs this function when DOM / page is ready / fully loaded
+    window.addEventListener('DOMContentLoaded', () => {
+      loadData();
+    });
+  </script>
+</html>
