@@ -1,6 +1,13 @@
 <html>
   <body>
     <h1>TOKOPAEDI</h1>
+    <h2>INSERT NEW PRODUCT</h2>
+    <form id="product-form">
+      <input type="text" name="name" placeholder="Nama Product" />
+      <input type="text" name="price" placeholder="Harga" />
+      <button type="submit">Tambah Produk Baru</button>
+    </form>
+    <h2>PRODUCTS</h2>
     <ul class="product-list">
       <li>Loading Product From API...</li>
     </ul>
@@ -9,6 +16,7 @@
     // javascript yang running di sisi browser
     const loadData = async () => {
       // communicate between client and server
+      // GET request
       const response = await window.fetch('http://localhost:3000/products');
       const products = await response.json();
 
@@ -38,5 +46,42 @@
     window.addEventListener('DOMContentLoaded', () => {
       loadData();
     });
+
+    // PROSES CREATE PRODUCT
+    const formContainer = document.querySelector('#product-form');
+  
+    formContainer.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const productFormElements = event.target.elements;
+
+      const newProductData = {};
+
+      for (const formInput of productFormElements) {
+        if (formInput.name) {
+          newProductData[formInput.name] = formInput.value;
+        }
+      }
+
+      // quickfix
+      newProductData.price = Number(newProductData.price);
+
+      // communicate with server / rest api
+      await window.fetch('http://localhost:3000/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newProductData)
+      });
+
+      for (const formInput of productFormElements) {
+        formInput.value = '';
+      }
+
+      document.querySelector('.product-list').innerHTML = '<li>Loading Product From API...</li>';
+      loadData();
+
+    });
+    
   </script>
 </html>
