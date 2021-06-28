@@ -17,7 +17,11 @@
     const loadData = async () => {
       // communicate between client and server
       // GET request
-      const response = await window.fetch('http://localhost:3000/products');
+      const response = await window.fetch('http://localhost:3000/products', {
+        headers: {
+          token: localStorage.getItem('access_token'),
+        }
+      });
       const products = await response.json();
 
       // render the UI to the DOM
@@ -69,7 +73,8 @@
       await window.fetch('http://localhost:3000/products', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          token: localStorage.getItem('access_token'),
         },
         body: JSON.stringify(newProductData)
       });

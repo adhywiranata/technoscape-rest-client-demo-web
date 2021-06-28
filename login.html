@@ -1,0 +1,32 @@
+<html>
+<body>
+  <form action="#" id="login-form">
+    <input type="text" name="username" />
+    <input type="text" name="password" />
+    <button type="submit">Login</button>
+  </form>
+  <script>
+    document.querySelector('#login-form').addEventListener('submit', async (evt) => {
+      evt.preventDefault();
+      const username = evt.target.elements[0].value;
+      const password = evt.target.elements[1].value;
+
+      const resp = await window.fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        })
+      })
+
+      const data = await resp.json();
+
+      localStorage.setItem('access_token', data.accessToken);
+      alert('LOGIN SUKSES!');
+    })
+  </script>
+</body>
+</html>
